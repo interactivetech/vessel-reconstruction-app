@@ -42,14 +42,12 @@ spec:
             memory: "32Gi"
         volumeMounts:
         - name: data-storage
-          # Mount the specific subdirectory from the PVC to the app's expected data path.
-          # The app code looks for data in './outputs', which is /app/outputs.
           mountPath: /app/outputs
-          subPath: shared/califra/outputs
+          # CORRECTED PATH: Changed from "shared/califra/outputs" to "califra/outputs"
+          subPath: califra/outputs
       volumes:
       - name: data-storage
         persistentVolumeClaim:
-          # This PVC must exist in the 'andrew-mendez-4a1f9d06' namespace before applying this manifest.
           claimName: kubeflow-shared-pvc
 
 ---
@@ -90,7 +88,7 @@ spec:
   hosts:
     - reconstruction.ingress.pcai0109.dc15.hpecolo.net
   gateways:
-    - istio-ingressgateway
+    - istio-system/ezaf-gateway
   http: # Using http route for a web application like Streamlit
   - route:
     - destination:
