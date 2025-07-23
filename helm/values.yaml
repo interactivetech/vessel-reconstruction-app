@@ -8,6 +8,19 @@ replicaCount: 1
 # The Kubernetes namespace to deploy all resources into.
 namespace: "andrew-mendez-4a1f9d06"
 
+# -- HPE Ezmeral Unified Analytics (EzUA) specific settings
+# These values are used for platform integration, especially for exposing the service externally.
+ezua:
+  # If true, an Istio VirtualService will be created to expose the application.
+  enabled: true
+  virtualService:
+    # The external hostname for the service.
+    # The `${DOMAIN_NAME}` placeholder is intended to be replaced by a CI/CD pipeline
+    # (e.g., using `envsubst`) before `helm install` is run.
+    endpoint: "reconstruction.${DOMAIN_NAME}"
+    # The Istio gateway to bind the VirtualService to.
+    istioGateway: "istio-system/ezaf-gateway"
+
 # -- Image configuration
 image:
   repository: mendeza/vessel-analysis-app
@@ -30,14 +43,6 @@ service:
   type: ClusterIP
   port: 8501
   name: http-streamlit
-
-# -- Istio VirtualService configuration
-virtualService:
-  enabled: true
-  # The public hostname for the application.
-  host: "reconstruction.ingress.pcai0109.dc15.hpecolo.net"
-  # The Istio gateway to use.
-  gateway: "istio-system/ezaf-gateway"
 
 # -- Persistence configuration
 # Mounts a pre-existing PersistentVolumeClaim.

@@ -1,4 +1,4 @@
-{{- if .Values.virtualService.enabled }}
+{{- if and .Values.ezua.enabled .Values.ezua.virtualService }}
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -8,9 +8,9 @@ metadata:
     {{- include "vessel-reconstruction.labels" . | nindent 4 }}
 spec:
   hosts:
-    - {{ .Values.virtualService.host | quote }}
+    - {{ .Values.ezua.virtualService.endpoint | quote }}
   gateways:
-    - {{ .Values.virtualService.gateway | quote }}
+    - {{ .Values.ezua.virtualService.istioGateway | quote }}
   http:
   - route:
     - destination:
