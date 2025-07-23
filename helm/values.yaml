@@ -1,0 +1,63 @@
+# Default values for vessel-reconstruction chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# The number of pods to run.
+replicaCount: 1
+
+# The Kubernetes namespace to deploy all resources into.
+namespace: "andrew-mendez-4a1f9d06"
+
+# -- Image configuration
+image:
+  repository: mendeza/vessel-analysis-app
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart's appVersion.
+  tag: "0.0.1"
+
+# -- Pod resource requests and limits.
+# We guarantee this amount of resources for the pod.
+resources:
+  requests:
+    cpu: "4"
+    memory: "32Gi"
+  limits:
+    cpu: "4"
+    memory: "32Gi"
+
+# -- Service configuration
+service:
+  type: ClusterIP
+  port: 8501
+  name: http-streamlit
+
+# -- Istio VirtualService configuration
+virtualService:
+  enabled: true
+  # The public hostname for the application.
+  host: "reconstruction.ingress.pcai0109.dc15.hpecolo.net"
+  # The Istio gateway to use.
+  gateway: "istio-system/ezaf-gateway"
+
+# -- Persistence configuration
+# Mounts a pre-existing PersistentVolumeClaim.
+persistence:
+  enabled: true
+  # The name of the existing PVC to use.
+  existingClaim: "kubeflow-shared-pvc"
+  # The subpath within the PVC to mount.
+  subPath: "califra/outputs"
+  # The path inside the container where the volume will be mounted.
+  mountPath: "/app/outputs"
+
+# -- Custom labels and annotations for pods
+podAnnotations: {}
+podLabels: {}
+
+# -- Service account configuration (included for best practices, though not used in original manifest)
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
